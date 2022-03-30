@@ -125,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               onTap: () {
                                 homeCtrl.toogle(index);
                                 if(menuList[index]['RouteName'].toString() != 'null'){
-                                var xy = menuList[index]['RouteName'];
+                                
                                 Get.toNamed(menuList[index]['RouteName']);
                                 }else{
                                 EasyLoading.showInfo('Halaman Belum tersedia',dismissOnTap: true);
@@ -135,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               onLongPress: () {
                                 homeCtrl.toogle(index);
                                 if(menuList[index]['RouteName'].toString() != 'null'){
-                                var xy = menuList[index]['RouteName'];
+                                
                                 Get.toNamed(menuList[index]['RouteName']);
                                 }else{
                                 EasyLoading.showInfo('Halaman Belum tersedia',dismissOnTap: true);
