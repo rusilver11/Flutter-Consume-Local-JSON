@@ -2,8 +2,8 @@ import 'package:get/get.dart';
 
 class HomeController extends GetxController{
   
-  var isPressed = true.obs;
-
+  RxInt isPressed = 0.obs;
+  toogle(int index) => isPressed.value = index;
   // toogle(int index){
   //   if(isPressed.contains(index)){
   //     isPressed.remove(index);

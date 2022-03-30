@@ -17,8 +17,30 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+List<Map<dynamic,dynamic>> menuList = [
+  {
+    "Icon" : 'assets/icons/shop_icon.svg',
+    "Title" : 'My Outlet',
+    "RouteName" : '/outlet'
+  },
+  {
+    "Icon" : 'assets/icons/cart_icon.svg',
+    "Title" : 'Order',
+    "RouteName" : 'null'
+  },
+  {
+    "Icon" : 'assets/icons/notification_icon.svg',
+    "Title" : 'Notification',
+    "RouteName" : 'null'
+  },
+  {
+    "Icon" : 'assets/icons/history_icon.svg',
+    "Title" : 'History',
+    "RouteName" : 'null'
+  }
+];
 
+class _HomeScreenState extends State<HomeScreen> {
   final homeCtrl = Get.put(HomeController());
 
   @override
@@ -58,7 +80,88 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   SizedBox(height: 2.0.hp),
                   //this box menu
-                  HomeMenu(homeCtrl: homeCtrl),
+                  //HomeMenu(homeCtrl: homeCtrl),
+                  Container(
+                    width: double.infinity,
+                    alignment: Alignment.centerRight,
+                    margin: EdgeInsets.only(right: 10.0.wp),
+                    child: TextButton(
+                        onPressed: () {
+                          Get.toNamed(RouteName.catalog);
+                        },
+                        child: Text(
+                          'CATALOG',
+                          style: TextStyle(
+                              color: kGrey,
+                              fontSize: 12.0.sp,
+                              fontWeight: FontWeight.bold),
+                        )),
+                  ),
+                  GridView.builder(
+                      itemCount: menuList.length,
+                      shrinkWrap: true,
+                      padding: EdgeInsets.only(
+                          bottom: kDefaultPadding,
+                          right: kDefaultPadding,
+                          left: kDefaultPadding),
+                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 150,
+                        crossAxisSpacing: 55,
+                        mainAxisSpacing: 10,
+                        mainAxisExtent: 134,
+                      ),
+                      itemBuilder: (context, index) {
+                        return Obx(()=>
+                        Container(
+                            width: 33.0.wp,
+                            height: 18.5.hp,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: kBrown, width: 2.0),
+                              color: homeCtrl.isPressed == index ? kBrown : Colors.white,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(28),
+                              onTap: () {
+                                homeCtrl.toogle(index);
+                                if(menuList[index]['RouteName'].toString() != 'null'){
+                                var xy = menuList[index]['RouteName'];
+                                Get.toNamed(menuList[index]['RouteName']);
+                                }else{
+                                EasyLoading.showInfo('Halaman Belum tersedia',dismissOnTap: true);
+                                }
+                        
+                              },
+                              onLongPress: () {
+                                homeCtrl.toogle(index);
+                                if(menuList[index]['RouteName'].toString() != 'null'){
+                                var xy = menuList[index]['RouteName'];
+                                Get.toNamed(menuList[index]['RouteName']);
+                                }else{
+                                EasyLoading.showInfo('Halaman Belum tersedia',dismissOnTap: true);
+                                }                                
+                              },
+                              splashColor: kBrown,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  SvgPicture.asset(menuList[index]['Icon'].toString(),
+                                      color: homeCtrl.isPressed.value == index
+                                          ? kSaffron : kBrown),
+                                  Text(
+                                    menuList[index]['Title'].toString(),
+                                    style: TextStyle(
+                                        color: homeCtrl.isPressed.value == index
+                                        ? kSaffron:kBrown,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      })
                 ],
               ),
             ),
