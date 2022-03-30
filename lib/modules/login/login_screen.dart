@@ -22,7 +22,7 @@ class _LoginState extends State<Login> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(automaticallyImplyLeading: false),
+        appBar: AppBar(backgroundColor: Colors.white),
         body: SafeArea(
           child: BackgroundBase(
             child: Padding(

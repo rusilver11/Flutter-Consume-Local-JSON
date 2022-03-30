@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:monster_group/utils/constant.dart';
 import 'package:monster_group/utils/extension.dart';
 
@@ -14,7 +16,7 @@ class CatalogScreen extends StatefulWidget {
 }
 
 class _CatalogScreenState extends State<CatalogScreen> {
-  List catalogueList = [];
+  List catalogueList = [].obs;
 
   Future<void> getCatalogue() async {
     final String response =
@@ -31,6 +33,12 @@ class _CatalogScreenState extends State<CatalogScreen> {
     getCatalogue();
   }
 
+  Future refreshData() async{
+    catalogueList.clear();
+    await Future.delayed(Duration(seconds: 2));
+    initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,61 +46,72 @@ class _CatalogScreenState extends State<CatalogScreen> {
         title: Text('Catalog'),
         centerTitle: true,
       ),
-      body: ListView.separated(
-        separatorBuilder: ((context, index) => Divider(
-          thickness: 0.2,
-          color: kGrey,
-          indent: 35.0,
-          endIndent: 35.0
-          )),
-        itemCount: catalogueList.length,
-        itemBuilder: (context, index) {
-          return Container(
-            padding: EdgeInsets.all(kDefaultPadding),
-            child: Row(
-              children: [
-                Container(
-                  height: 14.0.hp,
-                  width: 14.0.hp,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: kBrown, width: 2.0),
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(14.0),
-                    child: Image.network(catalogueList[index]['image'].toString())
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        catalogueList[index]['name'],
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 12.0.sp,
-                        ),
+      body: RefreshIndicator(
+        onRefresh: refreshData ,
+        child: Obx(
+          () => ListView.separated(
+            separatorBuilder: ((context, index) => Divider(
+              thickness: 0.2,
+              color: kGrey,
+              indent: 35.0,
+              endIndent: 35.0
+              )),
+            itemCount: catalogueList.length,
+            itemBuilder: (context, index) {
+              return Container(
+                padding: EdgeInsets.all(kDefaultPadding),
+                child: Row(
+                  children: [
+                    Container(
+                      height: 14.0.hp,
+                      width: 14.0.hp,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: kBrown, width: 2.0),
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                      Text(
-                        '${catalogueList[index]['price'].toString()}/kg',
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 10.0.sp,
-                          fontStyle: FontStyle.italic, 
-                          color: kGrey),
-                      )
-                    ],
-                  ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(14.0),
+                        child: CachedNetworkImage(
+                          imageUrl: catalogueList[index]['image'],
+                          placeholder: (context, url) => CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => CircularProgressIndicator(), 
+                      ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            catalogueList[index]['name'],
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 12.0.sp,
+                            ),
+                          ),
+                          Text(
+                            '${catalogueList[index]['price'].toString()}/kg',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 10.0.sp,
+                              fontStyle: FontStyle.italic, 
+                              color: kGrey),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          );
-        },
+              );
+            },
+          ),
+        ),
       ),
     );
   }
 }
+
+

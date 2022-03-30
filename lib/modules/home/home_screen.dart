@@ -48,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
+          backgroundColor: Colors.white,
           leading: IconButton(
             onPressed: () {},
             icon: Icon(Icons.menu),
